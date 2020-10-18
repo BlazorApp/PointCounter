@@ -1,0 +1,70 @@
+﻿@page "/myform"
+@using BlazorCounter.Data.Service
+@using BlazorCounter.Data.Model
+@inject IUserServices UserServices
+
+<h3>TestForm</h3>
+<div class="row">
+    <div class="col-12">
+        @storedValue
+    </div>
+</div>
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-10">
+        <form>
+            <div class="form-group">
+                <label id="idName">Name</label>
+                <input class="form-control" @bind-value="name" />
+            </div>
+        </form>
+    </div>
+    <div class="col-1"></div>
+</div>
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-11">
+        <button class="btn btn-info" @onclick="Save">SAVE</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-11">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in list)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+@code {
+    string storedValue = "";
+    string name = "";
+    public List<UserModel> list = new List<UserModel>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        list = UserServices.AllUser();
+    }
+
+    void Save()
+    {
+        this.storedValue = this.name;
+        UserServices.Save(new UserModel()
+        {
+            Name = this.name,
+            Id = 0
+        });
+    }
+}
